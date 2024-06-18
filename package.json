@@ -1,0 +1,35 @@
+{
+  "name": "next-typescript-project",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 5000",
+    "build": "next build",
+    "start": "next start -p 5000",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@material-ui/core": "^4.12.4",
+    "@material-ui/icons": "^4.11.3",
+    "@mui/icons-material": "^5.15.15",
+    "@mui/material": "^5.15.15",
+    "@tanstack/react-query": "^5.18.1",
+    "@types/react-query": "^1.2.9",
+    "@unform/web": "^2.1.6",
+    "axios": "^0.28.1",
+    "next": "13.5.6",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-query": "^3.39.3",
+    "recharts": "^2.12.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.3",
+    "@types/react": "^18.2.74",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10",
+    "typescript": "^5"
+  }
+}
