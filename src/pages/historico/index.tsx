@@ -87,32 +87,21 @@ const Processo: React.FC = () => {
 
     const handleSearchButtonClick = async () => {
         try {
-            await axios.post('http://164.152.46.88:3000/api/processo/search', { dataIni: new Date(startDate).getTime(), dataFim: new Date(endDate).getTime() });
-            let dados = [];
+            const dados = await axios.post('http://localhost:3000/api/processo/search', { dataIni: new Date(startDate).getTime(), dataFim: new Date(endDate).getTime()})
             let filtra1 = [];
-            let condic = false;
-            let anothercondi = false;
-            dados.filter(item => {
-                if (item?.phase === 0) {
-                    if (anothercondi) condic = true;
-                } else {
-                    item.upper_temp = Number(Number(item?.upper_temp).toFixed(3));
-                    item.lower_temp = Number(Number(item?.lower_temp).toFixed(3));
-                    item.chimney_temp = Number(Number(item?.chimney_temp).toFixed(3));
-                    item.aira_ref = Number(Number(item?.aira_ref).toFixed(3));
-                    item.chimney_temp = Number(Number(item?.chimney_temp).toFixed(2));
-                    if (item?.upper_temp >= 0 && item?.lower_temp >= 0 && item?.aira_ref >= 0 && 
-                        item?.chimney_temp >= 0 && item?.timestamp > 94668480) {
-                        item["Temperatura x"] = item?.upper_temp;
-                        item["Temperatura y"] = item?.lower_temp;
-                        item["Temperatura z"] = item?.chimney_temp;
-                        item["V. Ar combustão"] = item?.aira_ref;
-                        item.timestamp = (new Date(item?.timestamp * 1000).toLocaleString());
-                        item.timestamp = item?.timestamp.substring(0, 5) + " " + item?.timestamp.substring(12, 17);
-                        filtra1.push(item);
-                        anothercondi = true;
-                        return item;
-                    }
+            console.log(dados.data)
+            dados.data.filter(item => {
+                item.dados[0].x_temp = Number(Number(item.dados[0]?.x_temp).toFixed(3));
+                item.dados[0].y_temp = Number(Number(item.dados[0]?.y_temp).toFixed(3));
+                item.dados[0].aira_vaz = Number(Number(item.dados[0]?.aira_vaz).toFixed(3));
+                if (item.dados[0]?.x_temp >= 0 && item.dados[0]?.y_temp >= 0 && item.dados[0]?.aira_vaz >= 0) {
+                    item.dados[0]["Temperatura x"] = item.dados[0]?.x_temp;
+                    item.dados[0]["Temperatura y"] = item.dados[0]?.y_temp;
+                    item.dados[0]["Vazão Ar"] = item.dados[0]?.aira_vaz;
+                    item.dados[0].timestamp = (new Date(item.dados[0]?.timestamp * 1000).toLocaleString());
+                    item.dados[0].timestamp = item.dados[0]?.timestamp.substring(0, 5) + " " + item.dados[0]?.timestamp.substring(12, 17);
+                    filtra1.push(item.dados[0]);
+                    return item.dados[0];
                 }
             });
             filtra1.reverse();
@@ -126,14 +115,14 @@ const Processo: React.FC = () => {
         <>
             <div>
                 <h3>
-                    <div style={{background:'lightgray'}}>
+                    <div style={{ background: 'lightgray' }}>
                         &nbsp;Data de Início:&nbsp;&nbsp;
                         <input type="datetime-local" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
                         {/* <>{console.log('start', startDate)}</> */}
                         &nbsp;Data de Fim: &nbsp;&nbsp;
                         <input type="datetime-local" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-                        <Button variant="contained" endIcon={<SearchIcon />} 
-                            style={{ color: 'white', background: 'green', padding: '5px', marginLeft: '5px', textAlign: 'initial' }} 
+                        <Button variant="contained" endIcon={<SearchIcon />}
+                            style={{ color: 'white', background: 'green', padding: '5px', marginLeft: '5px', textAlign: 'initial' }}
                             onClick={handleSearchButtonClick}>Buscar
                         </Button>
                     </div>
@@ -157,8 +146,7 @@ const Processo: React.FC = () => {
                     <Legend verticalAlign="top" height={36} />
                     <Line type="monotone" dot={false} isAnimationActive={false} dataKey='Temperatura x' stroke="red" yAxisId={0} />
                     <Line type="monotone" dot={false} isAnimationActive={false} dataKey='Temperatura y' stroke="purple" yAxisId={0} />
-                    <Line type="monotone" dot={false} isAnimationActive={false} dataKey='Temperatura z' stroke="blue" yAxisId={0} />
-                    <Line type="monotone" dot={false} isAnimationActive={false} dataKey='V. Ar combustão' stroke="black" yAxisId="right" />
+                    <Line type="monotone" dot={false} isAnimationActive={false} dataKey='Vazão Ar' stroke="black" yAxisId="right" />
                     <Line type="monotone" dot={false} isAnimationActive={false} dataKey='phase' stroke="green" />
                 </LineChart>
             </div>
